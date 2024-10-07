@@ -1,4 +1,7 @@
+//==============================================================================
 // Form state save/reset functionality
+//==============================================================================
+
 function saveFormData() {
     const form = document.querySelector('form');
     const formData = {};
@@ -26,7 +29,6 @@ function saveFormData() {
     localStorage.setItem('savedFormData', JSON.stringify(formData));
 }
 
-// Function to load saved form data
 function loadFormData() {
     const savedData = localStorage.getItem('savedFormData');
     if (savedData) {
@@ -54,7 +56,6 @@ function loadFormData() {
     }
 }
 
-// Function to reset the form and clear localStorage
 function resetForm() {
     if (confirm("Are you sure you want to reset the form? All data will be lost.")) {
         const form = document.querySelector('form');
@@ -65,7 +66,6 @@ function resetForm() {
     return false;  // Indicate that the reset was cancelled
 }
 
-// Add event listeners
 document.addEventListener('DOMContentLoaded', () => {
     loadFormData();
     
@@ -85,7 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Character count functionality
+//==============================================================================
+// Character count functionality (jQuery version)
+//==============================================================================
+
 $(document).ready(function () {
     function updateCharCount($input) {
         const $charCountWrap = $input.siblings('.lf-char-count');
@@ -140,7 +143,10 @@ $(document).ready(function () {
     });
 });
 
+//==============================================================================
 // Progress bar functionality
+//==============================================================================
+
 document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.querySelector('.lf-progressbar');
     const formSteps = document.querySelectorAll('.lf-form-step');
@@ -172,7 +178,10 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeProgressBar();
 });
 
+//==============================================================================
 // Submit button functionality
+//==============================================================================
+
 document.addEventListener('DOMContentLoaded', function () {
     const fakeSubmit = document.getElementById('fakeSubmit');
     const realSubmit = document.getElementById('realSubmit');
@@ -199,7 +208,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+//==============================================================================
 // Button slide functionality
+//==============================================================================
+
 $(document).ready(function() {
     $('.slide-button').on('click', function(e) {
         e.preventDefault();
@@ -213,7 +225,10 @@ $(document).ready(function() {
     });
 });
 
-// Character count functionality
+//==============================================================================
+// Character count functionality (Vanilla JS version)
+//==============================================================================
+
 document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('.form_input, .form_input-message');
     function updateCharCount(input) {
@@ -262,8 +277,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+//==============================================================================
 // Error notification toggle
-// Function to check for visible error messages and toggle the error notification
+//==============================================================================
+
 function toggleErrorNotification() {
     const formSteps = document.querySelectorAll('.lf-form-step');
     const errorNotification = document.getElementById('error-notification');
