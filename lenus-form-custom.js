@@ -1,5 +1,4 @@
-<!-- Form state save/reset functionality -->
-<script>
+// Form state save/reset functionality
 function saveFormData() {
     const form = document.querySelector('form');
     const formData = {};
@@ -85,102 +84,96 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-</script>
 
-<!-- Character count functionality -->
-<script>
-  $(document).ready(function () {
+// Character count functionality
+$(document).ready(function () {
     function updateCharCount($input) {
-      const $charCountWrap = $input.siblings('.lf-char-count');
-      const $charCountElement = $charCountWrap.find('.lf-char-count-text');
-      if ($charCountElement.length === 0) return;
+        const $charCountWrap = $input.siblings('.lf-char-count');
+        const $charCountElement = $charCountWrap.find('.lf-char-count-text');
+        if ($charCountElement.length === 0) return;
 
-      const charCount = $input.val().length;
-      const minChar = parseInt($input.attr('min-char')) || 0;
-      const maxChar = parseInt($input.attr('max-char')) || 0;
-      const hasLimits = minChar > 0 || maxChar > 0;
+        const charCount = $input.val().length;
+        const minChar = parseInt($input.attr('min-char')) || 0;
+        const maxChar = parseInt($input.attr('max-char')) || 0;
+        const hasLimits = minChar > 0 || maxChar > 0;
 
-      // Construct the character count text based on limits
-      let countText = '';
-      if (minChar > 0 && maxChar > 0) {
-        countText = `${charCount} characters (${minChar} minimum, ${maxChar} maximum)`;
-      } else if (minChar > 0) {
-        countText = `${charCount}/${minChar} characters minimum`;
-      } else if (maxChar > 0) {
-        countText = `${charCount}/${maxChar} characters maximum`;
-      } else {
-        countText = `${charCount} character${charCount !== 1 ? 's' : ''}`;
-      }
-
-      $charCountElement.text(countText);
-      
-      // Set color based on validity
-      if (hasLimits) {
-        let isValid = true;
+        // Construct the character count text based on limits
+        let countText = '';
         if (minChar > 0 && maxChar > 0) {
-          isValid = charCount >= minChar && charCount <= maxChar;
+            countText = `${charCount} characters (${minChar} minimum, ${maxChar} maximum)`;
         } else if (minChar > 0) {
-          isValid = charCount >= minChar;
+            countText = `${charCount}/${minChar} characters minimum`;
         } else if (maxChar > 0) {
-          isValid = charCount <= maxChar;
+            countText = `${charCount}/${maxChar} characters maximum`;
+        } else {
+            countText = `${charCount} character${charCount !== 1 ? 's' : ''}`;
         }
-        $charCountElement.css('color', isValid ? '#5ca668' : '#e65c5c');
-      } else {
-        $charCountElement.css('color', '');
-      }
+
+        $charCountElement.text(countText);
+        
+        // Set color based on validity
+        if (hasLimits) {
+            let isValid = true;
+            if (minChar > 0 && maxChar > 0) {
+                isValid = charCount >= minChar && charCount <= maxChar;
+            } else if (minChar > 0) {
+                isValid = charCount >= minChar;
+            } else if (maxChar > 0) {
+                isValid = charCount <= maxChar;
+            }
+            $charCountElement.css('color', isValid ? '#5ca668' : '#e65c5c');
+        } else {
+            $charCountElement.css('color', '');
+        }
     }
 
     // Initialize character count for all relevant inputs
     $('input[type="text"], textarea').each(function() {
-      const $input = $(this);
-      const $charCountWrap = $input.siblings('.lf-char-count');
-      if ($charCountWrap.length > 0) {
-        $input.on('input', function() {
-          updateCharCount($input);
-        });
-        updateCharCount($input); // Initial update
-      }
+        const $input = $(this);
+        const $charCountWrap = $input.siblings('.lf-char-count');
+        if ($charCountWrap.length > 0) {
+            $input.on('input', function() {
+                updateCharCount($input);
+            });
+            updateCharCount($input); // Initial update
+        }
     });
-  });
-</script>
+});
 
-<!-- Progress bar functionality -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
+// Progress bar functionality
+document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.querySelector('.lf-progressbar');
     const formSteps = document.querySelectorAll('.lf-form-step');
 
     function initializeProgressBar() {
-      progressBar.innerHTML = '';
-      for (let i = 0; i < formSteps.length - 1; i++) {
-        const stepDiv = document.createElement('div');
-        stepDiv.className = 'lf-progressbar-step';
-        progressBar.appendChild(stepDiv);
-      }
-      updateProgressBar(0);
+        progressBar.innerHTML = '';
+        for (let i = 0; i < formSteps.length - 1; i++) {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'lf-progressbar-step';
+            progressBar.appendChild(stepDiv);
+        }
+        updateProgressBar(0);
     }
 
     function updateProgressBar(currentStep) {
-      const progressSteps = progressBar.children;
-      for (let i = 0; i < progressSteps.length; i++) {
-        progressSteps[i].classList.toggle('lf-progressbar-step-filled', i < currentStep);
-      }
+        const progressSteps = progressBar.children;
+        for (let i = 0; i < progressSteps.length; i++) {
+            progressSteps[i].classList.toggle('lf-progressbar-step-filled', i < currentStep);
+        }
     }
 
     // Listen for step changes and update progress bar
     document.addEventListener('inputflow-event[step-changed]', function (event) {
-      const newStepId = event.detail.newStep.id;
-      const newStepIndex = Array.from(formSteps).findIndex(step => step.getAttribute('if-id') === newStepId);
-      updateProgressBar(newStepIndex);
+        const newStepId = event.detail.newStep.id;
+        const newStepIndex = Array.from(formSteps).findIndex(step => step.getAttribute('if-id') === newStepId);
+        updateProgressBar(newStepIndex);
     });
 
     initializeProgressBar();
-  });
-</script>
+});
 
-<!-- Submit button functionality -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
+// Submit button functionality
+document.addEventListener('DOMContentLoaded', function () {
     const fakeSubmit = document.getElementById('fakeSubmit');
     const realSubmit = document.getElementById('realSubmit');
 
@@ -192,39 +185,35 @@ document.addEventListener('DOMContentLoaded', () => {
     fakeSubmit.prepend(loader);
 
     fakeSubmit.addEventListener('click', function (e) {
-      e.preventDefault();
+        e.preventDefault();
 
-      if (fakeSubmit.disabled) return;
+        if (fakeSubmit.disabled) return;
 
-      // Disable the fake submit button and show the loader
-      fakeSubmit.disabled = true;
-      loader.style.display = 'inline-block';
-      fakeSubmit.querySelector('.button-text').textContent = 'Please wait';
+        // Disable the fake submit button and show the loader
+        fakeSubmit.disabled = true;
+        loader.style.display = 'inline-block';
+        fakeSubmit.querySelector('.button-text').textContent = 'Please wait';
 
-      // Trigger the real submit button click
-      realSubmit.click();
+        // Trigger the real submit button click
+        realSubmit.click();
     });
-  });
-</script>
+});
 
-<!-- Button slide functionality -->
-<script>
-  $(document).ready(function() {
+// Button slide functionality
+$(document).ready(function() {
     $('.slide-button').on('click', function(e) {
-      e.preventDefault();
-      var $target = $($(this).attr('href'));
-      
-      if ($target.length) {
-        $('html, body').animate({
-          scrollTop: $target.offset().top
-        }, 1000);
-      }
+        e.preventDefault();
+        var $target = $($(this).attr('href'));
+        
+        if ($target.length) {
+            $('html, body').animate({
+                scrollTop: $target.offset().top
+            }, 1000);
+        }
     });
-  });
-</script>
+});
 
-<!-- Character count functionality -->
-<script>
+// Character count functionality
 document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('.form_input, .form_input-message');
     function updateCharCount(input) {
@@ -272,10 +261,8 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('input', () => updateCharCount(input));
     });
 });
-</script>
 
-<!-- Error notification toggle -->
-<script>
+// Error notification toggle
 // Function to check for visible error messages and toggle the error notification
 function toggleErrorNotification() {
     const formSteps = document.querySelectorAll('.lf-form-step');
@@ -306,4 +293,3 @@ const intervalId = setInterval(toggleErrorNotification, 100);
 window.addEventListener('beforeunload', () => {
     clearInterval(intervalId);
 });
-</script>
