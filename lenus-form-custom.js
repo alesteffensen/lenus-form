@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 //==============================================================================
-// Character count functionality (jQuery version)
+// Character count functionality
 //==============================================================================
 
 $(document).ready(function () {
