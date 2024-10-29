@@ -584,7 +584,9 @@ function initPreviewArea() {
 document.addEventListener("DOMContentLoaded", function() {
     // Initialize Fancybox independently
     Fancybox.bind("[data-fancybox]", {
-        // Options here if needed
+        backdrop: {
+            opacity: 0.8
+        }
     });
 });
 
