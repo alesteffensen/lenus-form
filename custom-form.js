@@ -235,27 +235,42 @@ $(document).ready(function () {
 function initShowHideContent() {
     let intervalId;
 
+    // Update visibility of content based on triggers
     function updateVisibility() {
         document.querySelectorAll('[show-content]').forEach(content => {
             const triggerId = content.getAttribute('show-content');
             const trigger = document.querySelector(`[show-trigger="${triggerId}"]`);
             
-            if (trigger && trigger.checked) {
+            if (!trigger) return;
+
+            let shouldShow = false;
+
+            // Handle different trigger types (select, radio, checkbox)
+            if (trigger.tagName === 'SELECT') {
+                const requiredChoice = trigger.getAttribute('show-trigger-choice');
+                shouldShow = trigger.value === requiredChoice;
+            } else {
+                shouldShow = trigger.checked;
+            }
+            
+            // Show/hide content with animation
+            if (shouldShow) {
                 content.classList.remove('hiding');
                 content.classList.add('visible');
             } else {
                 if (content.classList.contains('visible')) {
                     content.classList.remove('visible');
                     content.classList.add('hiding');
-                    // Remove 'hiding' class after animation completes
+                    // Remove hiding class after animation completes
                     setTimeout(() => {
                         content.classList.remove('hiding');
-                    }, 300); // Duration should match your CSS transition
+                    }, 300); // Duration should match CSS transition
                 }
             }
         });
     }
 
+    // Wrap content elements in required container
     function wrapContents() {
         document.querySelectorAll('[show-content]').forEach(content => {
             if (!content.parentElement.classList.contains('content-wrapper')) {
@@ -267,12 +282,14 @@ function initShowHideContent() {
         });
     }
 
+    // Start visibility check interval
     function startChecking() {
         wrapContents();
         updateVisibility();
         intervalId = setInterval(updateVisibility, 100);
     }
 
+    // Stop visibility check interval
     function stopChecking() {
         if (intervalId) {
             clearInterval(intervalId);
@@ -378,29 +395,54 @@ function initProgressBar() {
 //==============================================================================
 
 function initSubmitButton() {
-  const fakeSubmit = document.getElementById('fakeSubmit');
-  const realSubmit = document.getElementById('realSubmit');
+ const fakeSubmit = document.getElementById('fakeSubmit');
+ const realSubmit = document.getElementById('realSubmit');
 
-  if (!fakeSubmit || !realSubmit) return;
+ if (!fakeSubmit || !realSubmit) return;
 
-  // Create and prepend a loader to the fake submit button
-  const loader = document.createElement('div');
-  loader.className = 'loader';
-  fakeSubmit.prepend(loader);
+ const loader = document.createElement('div');
+ loader.className = 'loader';
+ fakeSubmit.prepend(loader);
 
-  fakeSubmit.addEventListener('click', function (e) {
-    e.preventDefault();
+ const resetButton = () => {
+   fakeSubmit.disabled = false;
+   loader.style.display = 'none';
+   fakeSubmit.querySelector('.button-text').textContent = 'Submit';
+ };
 
-    if (fakeSubmit.disabled) return;
+ fakeSubmit.addEventListener('click', function (e) {
+   e.preventDefault();
+   if (fakeSubmit.disabled) return;
+   fakeSubmit.disabled = true;
+   loader.style.display = 'inline-block';
+   fakeSubmit.querySelector('.button-text').textContent = 'Please wait';
+   realSubmit.click();
 
-    // Disable the fake submit button and show the loader
-    fakeSubmit.disabled = true;
-    loader.style.display = 'inline-block';
-    fakeSubmit.querySelector('.button-text').textContent = 'Please wait';
+   // Reset button if form submission fails (errors exist)
+   setTimeout(() => {
+     const hasErrors = document.querySelectorAll('.lf-error-box').length > 0;
+     if (hasErrors) resetButton();
+   }, 500);
+ });
 
-    // Trigger the real submit button click
-    realSubmit.click();
-  });
+ // Reset button on successful submission
+ const observer = new PerformanceObserver((list) => {
+   const entries = list.getEntries();
+   entries.forEach((entry) => {
+     if (entry.initiatorType === 'xmlhttprequest' || entry.initiatorType === 'fetch') {
+       const url = new URL(entry.name);
+       if (url.hostname.includes('make.com')) {
+         if (entry.responseEnd > 0 && entry.responseStatus === 200) {
+           resetButton();
+         } else {
+           resetButton();
+         }
+       }
+     }
+   });
+ });
+
+ observer.observe({ entryTypes: ['resource'] });
 }
 
 //==============================================================================
