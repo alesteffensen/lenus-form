@@ -584,9 +584,7 @@ function initPreviewArea() {
 document.addEventListener("DOMContentLoaded", function() {
     // Initialize Fancybox independently
     Fancybox.bind("[data-fancybox]", {
-        template: {
-            backdropColor: "rgba(24, 24, 27, 0.8)"
-        }
+        // Options here if needed
     });
 });
 
