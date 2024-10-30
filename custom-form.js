@@ -582,9 +582,22 @@ function initPreviewArea() {
 //==============================================================================
 
 document.addEventListener("DOMContentLoaded", function() {
-    // Initialize Fancybox independently
     Fancybox.bind("[data-fancybox]", {
-        // Options here if needed
+        animated: true,
+        showClass: "fancybox-fadeIn",
+        hideClass: "fancybox-fadeOut",
+        dragToClose: true,
+        wheel: false,
+        Image: {
+            zoom: true,
+        },
+        Toolbar: {
+            display: {
+                left: [],
+                middle: [],
+                right: ["close"],
+            },
+        }
     });
 });
 
