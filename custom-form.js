@@ -47,51 +47,29 @@ function updateSliderVisuals() {
     const trackFill = wrapper.querySelector('[if-lib="rangeslider-track-fill"]');
     const handles = wrapper.querySelectorAll('[if-lib="rangeslider-handle"]');
     const displayValues = wrapper.querySelectorAll('[if-lib="rangeslider-value-display"]');
+    const track = wrapper.querySelector('[if-lib="rangeslider-track"]');
 
     if (inputs.length === 1) {
-      // Single handle slider
       const value = Number(inputs[0].value);
       const min = Number(wrapper.getAttribute('if-lib-min'));
       const max = Number(wrapper.getAttribute('if-lib-max'));
       const percentage = ((value - min) / (max - min)) * 100;
+      const handleWidth = handles[0].offsetWidth;
+      const trackWidth = track.offsetWidth;
       
-      // Update track fill
       if (trackFill) {
         trackFill.style.left = '0px';
         trackFill.style.right = `calc(100% - ${percentage}%)`;
       }
       
-      // Update handle position
       if (handles[0]) {
-        handles[0].style.left = `calc(${percentage}% + 0px)`;
+        const position = (trackWidth - handleWidth) * (percentage / 100);
+        handles[0].style.left = `${position}px`;
       }
 
-      // Update display value
       if (displayValues[0]) {
         displayValues[0].textContent = value.toLocaleString();
       }
-    } else if (inputs.length === 2) {
-      // Double handle slider
-      const minValue = Number(inputs[0].value);
-      const maxValue = Number(inputs[1].value);
-      const min = Number(wrapper.getAttribute('if-lib-min'));
-      const max = Number(wrapper.getAttribute('if-lib-max'));
-      const minPercentage = ((minValue - min) / (max - min)) * 100;
-      const maxPercentage = ((maxValue - min) / (max - min)) * 100;
-      
-      // Update track fill
-      if (trackFill) {
-        trackFill.style.left = `${minPercentage}%`;
-        trackFill.style.right = `${100 - maxPercentage}%`;
-      }
-      
-      // Update handle positions
-      if (handles[0]) handles[0].style.left = `calc(${minPercentage}%)`;
-      if (handles[1]) handles[1].style.left = `calc(${maxPercentage}%)`;
-
-      // Update display values
-      if (displayValues[0]) displayValues[0].textContent = minValue.toLocaleString();
-      if (displayValues[1]) displayValues[1].textContent = maxValue.toLocaleString();
     }
   });
 }
@@ -648,62 +626,48 @@ document.addEventListener("DOMContentLoaded", function() {
 //==============================================================================
 
 function initializeAll() {
-    // Load saved form data
-    loadFormData();
-    
-    // Set up form event listeners
-    const form = document.querySelector('form');
-    if (form) {
-        // Add slider-specific visual update listeners
-        form.querySelectorAll('[if-lib="rangeslider-value-input"]').forEach(slider => {
-            slider.addEventListener('input', () => {
-                updateSliderVisuals();
-            });
-            // Add listener for programmatic changes
-            slider.addEventListener('change', () => {
-                updateSliderVisuals();
-            });
-        });
+  loadFormData();
+  
+  const form = document.querySelector('form');
+  if (form) {
+      form.querySelectorAll('[if-lib="rangeslider-value-input"]').forEach(slider => {
+          slider.addEventListener('input', updateSliderVisuals);
+          slider.addEventListener('change', updateSliderVisuals);
+      });
 
-        // Keep original form save listeners
-        form.addEventListener('input', saveFormData);
-        form.addEventListener('change', saveFormData);
-    } else {
-        console.warn('Form not found. Form state saving disabled.');
-    }
+      form.addEventListener('input', saveFormData);
+      form.addEventListener('change', saveFormData);
+  } else {
+      console.warn('Form not found. Form state saving disabled.');
+  }
 
-    // Initialize all components
-    const showHideController = initShowHideContent();
-    initCharacterCount();
-    initProgressBar();
-    initSubmitButton();
-    initSlideButtons();
-    initSubmitClear();
-    initPreviewArea();
+  const showHideController = initShowHideContent();
+  initCharacterCount();
+  initProgressBar();
+  initSubmitButton();
+  initSlideButtons();
+  initSubmitClear();
+  initPreviewArea();
 
-    // Add event listener for the reset link
-    const resetLink = document.getElementById('resetFormLink');
-    if (resetLink) {
-        resetLink.addEventListener('click', (e) => {
-            if (!resetForm(true)) {
-                e.preventDefault();
-            }
-        });
-    }
+  const resetLink = document.getElementById('resetFormLink');
+  if (resetLink) {
+      resetLink.addEventListener('click', (e) => {
+          if (!resetForm(true)) {
+              e.preventDefault();
+          }
+      });
+  }
 
-    // Initial check for error notification
-    toggleErrorNotification();
+  toggleErrorNotification();
 
-    // Set interval to check periodically for error notifications
-    const errorCheckIntervalId = setInterval(toggleErrorNotification, 100);
+  const errorCheckIntervalId = setInterval(toggleErrorNotification, 100);
 
-    // Clean up when the page is about to be unloaded
-    window.addEventListener('beforeunload', () => {
-        clearInterval(errorCheckIntervalId);
-        showHideController.stopChecking();
-    });
+  window.addEventListener('beforeunload', () => {
+      clearInterval(errorCheckIntervalId);
+      showHideController.stopChecking();
+  });
 
-    console.log('All components initialized successfully.');
+  console.log('All components initialized successfully.');
 }
 
 // Run initialization when DOM is ready
