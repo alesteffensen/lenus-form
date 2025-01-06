@@ -533,7 +533,7 @@ function initPreviewArea() {
   
         // Clone and insert content at embed location
         const clonedContent = relevantContent.cloneNode(true);
-        clonedContent.style.display = 'block'; // Ensure it's visible
+        clonedContent.style.display = 'flex'; // Ensure it's visible
         const embedPoint = embedLocation.querySelector('[data-embed-point]');
         if (embedPoint) {
           embedPoint.parentNode.insertBefore(clonedContent, embedPoint.nextSibling);
