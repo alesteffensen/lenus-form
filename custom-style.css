@@ -10,7 +10,7 @@
 
 @keyframes shake {
  0% { 
-   transform: translateX(0); 
+   transform: translateX(0);  
  }
  16.66% { 
    transform: translateX(-5px); 
@@ -45,7 +45,7 @@
 
 @keyframes slideUp {
  from { 
-   max-height: 500px; 
+   max-height: 9999px; 
    opacity: 1; 
  }
  to { 
@@ -94,7 +94,7 @@
 }
 
 [show-content].visible {
- max-height: 500px;
+ max-height: 9999px;
  opacity: 1;
  padding: 10px;
  transition: max-height 0.3s ease-out,
