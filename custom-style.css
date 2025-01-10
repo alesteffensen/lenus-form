@@ -71,7 +71,18 @@
 }
 
 .content-wrapper {
- overflow: hidden;
+    position: absolute;
+    width: 100%;
+    z-index: 0;
+    pointer-events: none;
+    transition: position 0.3s ease-out;
+    overflow: hidden;
+}
+
+.content-wrapper:has(.visible),
+.content-wrapper:has(.hiding) {
+    position: relative;
+    pointer-events: auto;
 }
 
 [show-content] {
